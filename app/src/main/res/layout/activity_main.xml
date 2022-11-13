@@ -2,17 +2,94 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/wlcm"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!"
-        app:layout_constraintBottom_toBottomOf="parent"
+    <Button
+        android:id="@+id/wlcm1"
+        android:layout_width="335dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="38dp"
+        android:layout_marginTop="2dp"
+        android:layout_marginEnd="38dp"
+        android:layout_marginBottom="77dp"
+        android:gravity="center"
+        android:text="Welcome to ChatApp (User)"
+        app:layout_constraintBottom_toTopOf="@+id/user1"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <Button
+        android:id="@+id/user3"
+        android:layout_width="335dp"
+        android:layout_height="77dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="22dp"
+        android:layout_marginBottom="537dp"
+        android:gravity="left"
+        android:text="User 3"
+        app:layout_constraintBottom_toTopOf="@+id/newUser"
+        app:layout_constraintEnd_toStartOf="@+id/wlcm1"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user2" />
+
+    <Button
+        android:id="@+id/user1"
+        android:layout_width="335dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="76dp"
+        android:layout_marginEnd="60dp"
+        android:gravity="left"
+        android:text="User 1"
+        app:layout_constraintBottom_toTopOf="@+id/user2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/wlcm1" />
+
+    <Button
+        android:id="@+id/user2"
+        android:layout_width="335dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="60dp"
+        android:gravity="left"
+        android:text="User 2"
+        app:layout_constraintBottom_toTopOf="@+id/user3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user1" />
+
+    <Button
+        android:id="@+id/newUser"
+        android:layout_width="155dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="537dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="22dp"
+        android:text="New User"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/settings"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user3" />
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="138dp"
+        android:layout_height="52dp"
+        android:layout_marginStart="109dp"
+        android:layout_marginTop="579dp"
+        android:layout_marginEnd="9dp"
+        android:layout_marginBottom="21dp"
+        android:text="Settings"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/newUser"
+        app:layout_constraintTop_toBottomOf="@+id/wlcm1" />
 </androidx.constraintlayout.widget.ConstraintLayout>
