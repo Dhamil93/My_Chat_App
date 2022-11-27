@@ -2,6 +2,7 @@ package com.example.mychatapp.activities;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -32,6 +33,7 @@ public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
     private Preference preference;
     private String encodedImage;
+    private int CAMERA_REQUEST_CODE;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +60,7 @@ public class SignUpActivity extends AppCompatActivity {
                 if (item.getItemId() == R.id.use_camera) {
                     Toast.makeText(getApplicationContext(), "Using Camera", Toast.LENGTH_SHORT).show();
                     intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                   selectImage.launch(intent);
+                    startActivityForResult(intent, CAMERA_REQUEST_CODE);
 
                 } else if (item.getItemId() == R.id.select_photo) {
                     intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
@@ -76,6 +77,15 @@ public class SignUpActivity extends AppCompatActivity {
 //            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 //            selectImage.launch(intent);
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == CAMERA_REQUEST_CODE) {
+            Bitmap pic = data.getParcelableExtra("data");
+            setProfileImage(pic);
+        }
     }
 
     private void showToast(String message) {
@@ -130,9 +140,7 @@ public class SignUpActivity extends AppCompatActivity {
                         try {
                             InputStream inputStream = getContentResolver().openInputStream(imageUri);
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-                            binding.dpic.setImageBitmap(bitmap);
-                            binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = encodeImage(bitmap);
+                            setProfileImage(bitmap);
                         } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
@@ -140,6 +148,12 @@ public class SignUpActivity extends AppCompatActivity {
                 }
             }
     );
+
+    private void setProfileImage(Bitmap b) {
+        binding.dpic.setImageBitmap(b);
+        binding.textAddImage.setVisibility(View.GONE);
+        encodedImage = encodeImage(b);
+    }
 
     private boolean isValidSignUpDetails() {
         if (encodedImage == null) {
