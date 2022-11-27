@@ -4,21 +4,20 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.Activity;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.util.Patterns;
 import android.view.View;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import com.example.mychatapp.R;
-import com.example.mychatapp.databinding.ActivitySignInBinding;
 import com.example.mychatapp.databinding.ActivitySignUpBinding;
 import com.example.mychatapp.utilities.Database;
 import com.example.mychatapp.utilities.Preference;
@@ -28,7 +27,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 public class SignUpActivity extends AppCompatActivity {
     private ActivitySignUpBinding binding;
@@ -47,21 +45,44 @@ public class SignUpActivity extends AppCompatActivity {
     private void setListeners() {
         binding.textSignIn.setOnClickListener(view -> onBackPressed());
         binding.buttonSignUp.setOnClickListener(view -> {
-            if (isValidSignUpDetails()){
+            if (isValidSignUpDetails()) {
                 signUp();
             }
         });
         binding.layoutImage.setOnClickListener(view -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            selectImage.launch(intent);
+            PopupMenu popupMenu = new PopupMenu(getApplicationContext(), view);
+            popupMenu.getMenuInflater().inflate(R.menu.image_select_menu, popupMenu.getMenu());
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+                Intent intent;
+                if (item.getItemId() == R.id.use_camera) {
+                    Toast.makeText(getApplicationContext(), "Using Camera", Toast.LENGTH_SHORT).show();
+                    intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                   selectImage.launch(intent);
+
+                } else if (item.getItemId() == R.id.select_photo) {
+                    intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                    intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    selectImage.launch(intent);
+                } else {
+
+                }
+                return true;
+            });
+
+            popupMenu.show();
+//           Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//            selectImage.launch(intent);
         });
     }
-    private void showToast(String message){
+
+    private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
-    private void signUp(){
+    private void signUp() {
         loading(true);
         FirebaseFirestore data = FirebaseFirestore.getInstance();
         HashMap<String, Object> user = new HashMap<>();
@@ -88,10 +109,9 @@ public class SignUpActivity extends AppCompatActivity {
                 });
 
 
-
     }
 
-    private String encondeImage(Bitmap bitmap) {
+    private String encodeImage(Bitmap bitmap) {
         int previewWidth = 150;
         int previewHeight = bitmap.getHeight() * previewWidth / bitmap.getWidth();
         Bitmap previewBitmap = Bitmap.createScaledBitmap(bitmap, previewWidth, previewHeight, false);
@@ -112,8 +132,8 @@ public class SignUpActivity extends AppCompatActivity {
                             Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
                             binding.dpic.setImageBitmap(bitmap);
                             binding.textAddImage.setVisibility(View.GONE);
-                            encodedImage = encondeImage(bitmap);
-                        }catch (FileNotFoundException e) {
+                            encodedImage = encodeImage(bitmap);
+                        } catch (FileNotFoundException e) {
                             e.printStackTrace();
                         }
                     }
@@ -121,40 +141,40 @@ public class SignUpActivity extends AppCompatActivity {
             }
     );
 
-    private boolean isValidSignUpDetails(){
-    if (encodedImage == null){
-        showToast("Select Imaage");
+    private boolean isValidSignUpDetails() {
+        if (encodedImage == null) {
+            showToast("Select Imaage");
 
-        return false;
-    }else if (binding.enterName.getText().toString().trim().isEmpty()){
-        showToast("Enter Name");
-        return false;
-    }else if (binding.enterEmail.getText().toString().trim().isEmpty()){
-        showToast("Enter Email");
-        return false;
-    } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.enterEmail.getText().toString()).matches()){
-        showToast("Enter Valid Email");
-        return false;
-    } else if (binding.enterPassword.getText().toString().trim().isEmpty()){
-        showToast("Enter Password");
-        return false;
-    } else if (binding.enterConfirmPassword.getText().toString().trim().isEmpty()){
-        showToast("Confirm Password");
-        return false;
-    } else if (!binding.enterPassword.getText().toString().equals(binding.enterConfirmPassword.getText().toString())){
-    showToast("Password must match");
-    return false;
-    } else {
-        return true;
+            return false;
+        } else if (binding.enterName.getText().toString().trim().isEmpty()) {
+            showToast("Enter Name");
+            return false;
+        } else if (binding.enterEmail.getText().toString().trim().isEmpty()) {
+            showToast("Enter Email");
+            return false;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(binding.enterEmail.getText().toString()).matches()) {
+            showToast("Enter Valid Email");
+            return false;
+        } else if (binding.enterPassword.getText().toString().trim().isEmpty()) {
+            showToast("Enter Password");
+            return false;
+        } else if (binding.enterConfirmPassword.getText().toString().trim().isEmpty()) {
+            showToast("Confirm Password");
+            return false;
+        } else if (!binding.enterPassword.getText().toString().equals(binding.enterConfirmPassword.getText().toString())) {
+            showToast("Password must match");
+            return false;
+        } else {
+            return true;
+        }
+
     }
 
-    }
-
-    private void loading(Boolean isLoading){
+    private void loading(Boolean isLoading) {
         if (isLoading) {
             binding.buttonSignUp.setVisibility(View.INVISIBLE);
             binding.progressBar.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             binding.progressBar.setVisibility(View.INVISIBLE);
             binding.buttonSignUp.setVisibility(View.VISIBLE);
         }

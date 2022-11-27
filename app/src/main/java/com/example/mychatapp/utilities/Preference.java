@@ -28,7 +28,7 @@ public class Preference {
 
     public String getString(String key){
 
-        return sharedPreferences.getString(key, null);
+        return sharedPreferences.getString(key,null);
     }
 
     public void clear() {
