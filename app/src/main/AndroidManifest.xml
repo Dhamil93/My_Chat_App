@@ -14,15 +14,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.MyChatApp"
         tools:targetApi="31">
+
+        <activity android:name=".activities.ChatActivity"
+            android:windowSoftInputMode="adjustResize"/>
+
         <activity
-            android:name=".UsersActivity2"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".UsersActitvity"
+            android:name=".activities.UsersActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
